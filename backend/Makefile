@@ -1,6 +1,6 @@
-DATABASE_URI="postgres://postgres:root@localhost:5432/app?sslmode=disable"
-
 MIGRATIONS_DIR="migrations"
+
+DATABASE_URI="postgres://doadmin:AVNS_dsLxBC4W4w_dvG0ykUC@db-postgresql-auction-do-user-14102421-0.c.db.ondigitalocean.com:25060/auction"
 
 .PHONY: server fmt linter migrate-up migrate-down
 

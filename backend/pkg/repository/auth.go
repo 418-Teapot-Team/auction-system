@@ -2,8 +2,7 @@ package repository
 
 import "gorm.io/gorm"
 
-type AuthRepository interface {
-}
+type AuthRepository interface{}
 
 type repo struct {
 	db *gorm.DB
