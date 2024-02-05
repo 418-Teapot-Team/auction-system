@@ -7,11 +7,13 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
+
+	"auction-system/pkg/utils"
 
 	server "auction-system"
 
 	"github.com/gin-gonic/gin"
-	"github.com/subosito/gotenv"
 
 	"auction-system/internal/web/handlers/auth"
 	"auction-system/internal/web/routes"
@@ -21,10 +23,6 @@ import (
 )
 
 func main() {
-	if err := gotenv.Load(); err != nil {
-		log.Fatal(err)
-	}
-
 	logx, err := logrusx.New("auction-system")
 	if err != nil {
 		log.Fatal(err)
@@ -45,11 +43,22 @@ func main() {
 
 	app := gin.Default()
 
+	accessTokenDuration, err := time.ParseDuration(os.Getenv("ACCESS_TOKEN_DURATION"))
+	if err != nil {
+		log.Fatal("invalid value in access token duration", err)
+	}
+
+	manager := utils.NewJwtManager(
+		os.Getenv("SECRET_KEY"),
+		os.Getenv("JWT_ISSUER"),
+		accessTokenDuration,
+	)
+
 	v1 := app.Group("/api/v1")
 
 	authRepo := repository.NewAuthRepository(db)
 
-	authHandler := auth.NewHandler(logx, authRepo)
+	authHandler := auth.NewHandler(logx, authRepo, manager)
 
 	routes.AuthRouters(v1, authHandler)
 
