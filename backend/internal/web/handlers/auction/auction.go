@@ -1,12 +1,13 @@
 package auction
 
 import (
-	"fmt"
-	"net/http"
-
 	"auction-system/internal/entity"
 	"auction-system/pkg/middlewares"
 	"auction-system/pkg/models"
+	"fmt"
+	"github.com/google/uuid"
+	"net/http"
+	"time"
 
 	"github.com/BoryslavGlov/logrusx"
 	"github.com/gin-gonic/gin"
@@ -93,5 +94,46 @@ func (h *Handler) GetAuction(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, auction)
+}
 
+type auctionDraftResponse struct {
+	Id          *uuid.UUID      `gorm:"column:id;->" json:"id"`
+	Title       string          `gorm:"column:title" json:"title"`
+	Description string          `gorm:"column:description" json:"description"`
+	StartBit    int64           `gorm:"column:startbit" json:"startBit"`
+	CurrentBit  int64           `gorm:"column:currentbit" json:"currentBit"`
+	CreatedAt   time.Time       `gorm:"column:createdat;->" json:"createdAt"`
+	UpdatedAt   time.Time       `gorm:"column:updatedat" json:"updatedAt"`
+	Images      []models.Images `gorm:"foreignKey:AuctionId;" json:"images"`
+}
+
+func (h *Handler) AuctionsDraft(ctx *gin.Context) {
+	userId := middlewares.GetUserId(ctx)
+
+	auctions, err := h.repo.GetAuctionsByUserId(userId)
+	if err != nil {
+		h.logx.Error("failed to GetAuctionByUserId",
+			logrusx.LogField{Key: "context", Value: err},
+			logrusx.LogField{Key: "request", Value: fmt.Sprintf("%+v", ctx.Request)},
+		)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, entity.ErrResponse{Message: err.Error()})
+		return
+	}
+
+	var draft []auctionDraftResponse
+
+	for _, auction := range auctions {
+		draft = append(draft, auctionDraftResponse{
+			Id:          auction.Id,
+			Title:       auction.Title,
+			Description: auction.Description,
+			StartBit:    auction.StartBit,
+			CurrentBit:  auction.CurrentBit,
+			CreatedAt:   auction.CreatedAt,
+			UpdatedAt:   auction.UpdatedAt,
+			Images:      auction.Images,
+		})
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": draft})
 }

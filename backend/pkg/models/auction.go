@@ -13,7 +13,7 @@ func (Auction) TableName() string {
 }
 
 type Auction struct {
-	User User `gorm:"foreignKey:CreatorId;" json:"creator"`
+	User User `gorm:"foreignKey:CreatorId;" json:"creator,omitempty"`
 
 	Id          *uuid.UUID `gorm:"column:id;->" json:"id"`
 	CreatorId   string     `gorm:"column:creatorid" json:"-"`

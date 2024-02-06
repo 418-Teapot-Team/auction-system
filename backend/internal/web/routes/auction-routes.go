@@ -10,6 +10,7 @@ func AuctionRouters(router *gin.RouterGroup, h *auction.Handler, middleware midd
 	_auction := router.Group("/auction", middleware.AuthRequired)
 	{
 		_auction.POST("/create", h.CreateAuction)
+		_auction.GET("/draft", h.AuctionsDraft)
 	}
 
 	unauthorized := router.Group("/auction")

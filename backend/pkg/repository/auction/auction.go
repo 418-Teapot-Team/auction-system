@@ -10,6 +10,7 @@ type Repository interface {
 	CreateAuction(auction *models.Auction) error
 	GetAllAuctions() (auctions []models.Auction, err error)
 	GetAuctionById(id string) (auction models.Auction, err error)
+	GetAuctionsByUserId(id string) (auctions []models.Auction, err error)
 }
 
 type repo struct {
@@ -45,6 +46,16 @@ func (db *repo) GetAuctionById(id string) (auction models.Auction, err error) {
 		Preload("User").Find(&auction).Error
 	if err != nil {
 		return
+	}
+	return
+}
+
+func (db *repo) GetAuctionsByUserId(id string) (auctions []models.Auction, err error) {
+	err = db.db.Model(&models.Auction{}).
+		Where("creatorid = ?", id).
+		Preload("Images").Find(&auctions).Error
+	if err != nil {
+		return nil, err
 	}
 	return
 }
