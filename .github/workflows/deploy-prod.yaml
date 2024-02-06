@@ -17,4 +17,7 @@ jobs:
         PG_PORT: ${{ secrets.PG_PORT }}
         PG_USERNAME: ${{ secrets.PG_USERNAME }}
         PORT: ${{ secrets.PORT }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
+        ACCESS_TOKEN_DURATION: ${{ secrets.ACCESS_TOKEN_DURATION }}
       run: docker-compose up -d --force-recreate --build 

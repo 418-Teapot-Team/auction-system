@@ -9,6 +9,9 @@ services:
       - PG_PORT=${PG_PORT}
       - PG_USERNAME=${PG_USERNAME}
       - PORT=${PORT}
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - ACCESS_TOKEN_DURATION=${ACCESS_TOKEN_DURATION}
     build:
       context: backend
       dockerfile: Dockerfile
