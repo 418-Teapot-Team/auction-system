@@ -1,4 +1,4 @@
-package repository
+package auth
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type AuthRepository interface {
+type Repository interface {
 	CreateUser(user *models.User) (err error)
 	GetUserByUsername(username string) (*models.User, error)
 }
@@ -17,7 +17,7 @@ type repo struct {
 	db *gorm.DB
 }
 
-func NewAuthRepository(db *gorm.DB) AuthRepository {
+func NewAuthRepository(db *gorm.DB) Repository {
 	return &repo{db: db}
 }
 

@@ -15,6 +15,10 @@ type JwtManager struct {
 	AccessTokenDuration time.Duration
 }
 
+type jwtClaims struct {
+	jwt.StandardClaims
+}
+
 func NewJwtManager(secretKey, issuer string, accessTokenDuration time.Duration) *JwtManager {
 	return &JwtManager{
 		secretKey:           secretKey,
@@ -23,10 +27,10 @@ func NewJwtManager(secretKey, issuer string, accessTokenDuration time.Duration) 
 	}
 }
 
-func (m *JwtManager) ValidateToken(signedToken string) (claims *jwt.StandardClaims, err error) {
+func (m *JwtManager) ValidateToken(signedToken string) (claims *jwtClaims, err error) {
 	token, err := jwt.ParseWithClaims(
 		signedToken,
-		jwt.StandardClaims{},
+		&jwtClaims{},
 		func(token *jwt.Token) (interface{}, error) {
 			return []byte(m.secretKey), nil
 		},
@@ -35,7 +39,7 @@ func (m *JwtManager) ValidateToken(signedToken string) (claims *jwt.StandardClai
 		return
 	}
 
-	claims, ok := token.Claims.(*jwt.StandardClaims)
+	claims, ok := token.Claims.(*jwtClaims)
 
 	if !ok {
 		return nil, errors.New("couldn't parse claims")
@@ -49,10 +53,12 @@ func (m *JwtManager) ValidateToken(signedToken string) (claims *jwt.StandardClai
 }
 
 func (m *JwtManager) GenerateToken(user models.User) (signedToken string, err error) {
-	claims := &jwt.StandardClaims{
-		Subject:   user.Id.String(),
-		ExpiresAt: time.Now().Local().Add(m.AccessTokenDuration).Unix(),
-		Issuer:    m.issuer,
+	claims := &jwtClaims{
+		StandardClaims: jwt.StandardClaims{
+			Subject:   user.Id.String(),
+			ExpiresAt: time.Now().Local().Add(m.AccessTokenDuration).Unix(),
+			Issuer:    m.issuer,
+		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
