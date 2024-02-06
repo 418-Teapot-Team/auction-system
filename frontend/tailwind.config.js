@@ -18,6 +18,7 @@ export default {
         white: '#F1F1EE',
         grey: '#585855',
         'light-green': '#77FF61',
+        'menu-bg': '#383E3E',
       },
     },
   },
