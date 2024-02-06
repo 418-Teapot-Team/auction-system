@@ -19,3 +19,10 @@ services:
       - 6969:6969
     volumes:
       - .:/app
+  frontend:
+    image: frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
