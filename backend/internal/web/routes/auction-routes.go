@@ -11,4 +11,10 @@ func AuctionRouters(router *gin.RouterGroup, h *auction.Handler, middleware midd
 	{
 		_auction.POST("/create", h.CreateAuction)
 	}
+
+	unauthorized := router.Group("/auction")
+	{
+		unauthorized.GET("/all", h.GetAllAuctions)
+		unauthorized.GET("/:id", h.GetAuction)
+	}
 }

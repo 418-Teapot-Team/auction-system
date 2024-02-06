@@ -8,6 +8,8 @@ import (
 
 type Repository interface {
 	CreateAuction(auction *models.Auction) error
+	GetAllAuctions() (auctions []models.Auction, err error)
+	GetAuctionById(id string) (auction models.Auction, err error)
 }
 
 type repo struct {
@@ -26,4 +28,23 @@ func (db *repo) CreateAuction(auction *models.Auction) error {
 	}
 
 	return tx.Commit().Error
+}
+
+func (db *repo) GetAllAuctions() (auctions []models.Auction, err error) {
+	err = db.db.Preload("Images").Preload("User").Find(&auctions).Error
+	if err != nil {
+		return nil, err
+	}
+	return
+}
+
+func (db *repo) GetAuctionById(id string) (auction models.Auction, err error) {
+	err = db.db.Model(&models.Auction{}).
+		Where("id = ?", id).
+		Preload("Images").
+		Preload("User").Find(&auction).Error
+	if err != nil {
+		return
+	}
+	return
 }

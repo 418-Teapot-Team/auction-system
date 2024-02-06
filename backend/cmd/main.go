@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/subosito/gotenv"
 	"log"
 	"os"
 	"os/signal"
@@ -29,6 +30,11 @@ import (
 )
 
 func main() {
+
+	if err := gotenv.Load(); err != nil {
+		log.Fatal(err)
+	}
+
 	logx, err := logrusx.New("auction-system")
 	if err != nil {
 		log.Fatal(err)
