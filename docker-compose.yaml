@@ -2,6 +2,16 @@ version: '3'
 services:
   backend:
     image: auction-backend
+    environment:
+      - DB_NAME=${DB_NAME}
+      - PG_HOST=${PG_HOST}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_PORT=${PG_PORT}
+      - PG_USERNAME=${PG_USERNAME}
+      - PORT=${PORT}
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - ACCESS_TOKEN_DURATION=${ACCESS_TOKEN_DURATION}
     build:
       context: backend
       dockerfile: Dockerfile
@@ -9,3 +19,10 @@ services:
       - 6969:6969
     volumes:
       - .:/app
+  frontend:
+    image: frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000

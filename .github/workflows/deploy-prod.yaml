@@ -4,15 +4,20 @@ on:
   push:
     branches: [ "main" ]
 
-env:
-  ENV_FILE: ${{ secrets.ENV_FILE }}
-
 jobs:
   build:
     runs-on: [self-hosted]
     steps:
     - uses: actions/checkout@v3
-    - name: Set Environment Variables
-      run: echo $ENV_FILE > .env
     - name: Docker Compose
+      env:
+        DB_NAME: ${{ secrets.DB_NAME }}
+        PG_HOST: ${{ secrets.PG_HOST }}
+        PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+        PG_PORT: ${{ secrets.PG_PORT }}
+        PG_USERNAME: ${{ secrets.PG_USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
+        ACCESS_TOKEN_DURATION: ${{ secrets.ACCESS_TOKEN_DURATION }}
       run: docker-compose up -d --force-recreate --build 
