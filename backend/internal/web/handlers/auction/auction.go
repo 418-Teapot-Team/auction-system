@@ -1,13 +1,15 @@
 package auction
 
 import (
+	"fmt"
+	"net/http"
+	"time"
+
 	"auction-system/internal/entity"
 	"auction-system/pkg/middlewares"
 	"auction-system/pkg/models"
-	"fmt"
+
 	"github.com/google/uuid"
-	"net/http"
-	"time"
 
 	"github.com/BoryslavGlov/logrusx"
 	"github.com/gin-gonic/gin"
