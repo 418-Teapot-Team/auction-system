@@ -5,7 +5,12 @@ on:
     branches: [ "main" ]
 
 env:
-  ENV_FILE: ${{ secrets.ENV_FILE }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+  PG_HOST: ${{ secrets.PG_HOST }}
+  PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+  PG_PORT: ${{ secrets.PG_PORT }}
+  PG_USERNAME: ${{ secrets.PG_USERNAME }}
+  PORT: ${{ secrets.PORT }}
 
 jobs:
   build:
