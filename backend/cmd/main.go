@@ -9,6 +9,13 @@ import (
 	"syscall"
 	"time"
 
+	"auction-system/pkg/middlewares"
+
+	"auction-system/internal/web/handlers/auction"
+	rauction "auction-system/pkg/repository/auction"
+
+	rauth "auction-system/pkg/repository/auth"
+
 	"auction-system/pkg/utils"
 
 	server "auction-system"
@@ -60,12 +67,16 @@ func main() {
 	)
 
 	v1 := app.Group("/api/v1")
+	middlewaresService := middlewares.NewMiddlewareService(manager)
 
-	authRepo := repository.NewAuthRepository(db)
+	authRepo := rauth.NewAuthRepository(db)
+	auctionRepo := rauction.NewAuctionRepository(db)
 
 	authHandler := auth.NewHandler(logx, authRepo, manager)
+	auctionHandler := auction.NewHandler(logx, auctionRepo)
 
 	routes.AuthRouters(v1, authHandler)
+	routes.AuctionRouters(v1, auctionHandler, middlewaresService)
 
 	srv := new(server.Server)
 
