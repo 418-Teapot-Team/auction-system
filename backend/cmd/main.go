@@ -20,21 +20,15 @@ import (
 
 	server "auction-system"
 
-	"github.com/gin-gonic/gin"
-	"github.com/subosito/gotenv"
-
 	"auction-system/internal/web/handlers/auth"
 	"auction-system/internal/web/routes"
 	"auction-system/pkg/repository"
+	"github.com/gin-gonic/gin"
 
 	"github.com/BoryslavGlov/logrusx"
 )
 
 func main() {
-	if err := gotenv.Load(); err != nil {
-		log.Fatal(err)
-	}
-
 	logx, err := logrusx.New("auction-system")
 	if err != nil {
 		log.Fatal(err)
