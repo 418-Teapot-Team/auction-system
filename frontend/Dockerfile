@@ -21,7 +21,7 @@ ADD . /app
 RUN npm run build
 
 # start final image
-FROM node:20-alpine
+FROM node:20-alpine as runner
 
 
 WORKDIR /app
