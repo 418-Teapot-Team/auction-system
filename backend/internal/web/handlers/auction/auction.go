@@ -2,12 +2,13 @@ package auction
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin/binding"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/gin-gonic/gin/binding"
 
 	"auction-system/internal/entity"
 	"auction-system/pkg/middlewares"

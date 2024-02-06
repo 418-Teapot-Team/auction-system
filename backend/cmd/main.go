@@ -29,7 +29,6 @@ import (
 )
 
 func main() {
-
 	logx, err := logrusx.New("auction-system")
 	if err != nil {
 		log.Fatal(err)
