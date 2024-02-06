@@ -2,7 +2,11 @@ package auction
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin/binding"
+	"io"
+	"mime/multipart"
 	"net/http"
+	"os"
 	"time"
 
 	"auction-system/internal/entity"
@@ -16,10 +20,12 @@ import (
 )
 
 type createAuctionRequestBody struct {
-	Title       string   `json:"title" binding:"required"`
-	Description string   `json:"description" binding:"required"`
-	StartBit    int64    `json:"startBit" binding:"required"`
-	Images      []string `json:"images" binding:"required"`
+	Images  []*multipart.FileHeader `form:"images" binding:"required"`
+	Auction struct {
+		Title       string `json:"title" binding:"required"`
+		Description string `json:"description" binding:"required"`
+		StartBit    int64  `json:"startBit" binding:"required"`
+	} `form:"auction" binding:"required"`
 }
 
 func (h *Handler) CreateAuction(ctx *gin.Context) {
@@ -27,7 +33,7 @@ func (h *Handler) CreateAuction(ctx *gin.Context) {
 
 	userId := middlewares.GetUserId(ctx)
 
-	if err := ctx.BindJSON(&input); err != nil {
+	if err := ctx.ShouldBindWith(&input, binding.FormMultipart); err != nil {
 		h.logx.Error("failed to BindJSON CreateAuction",
 			logrusx.LogField{Key: "context", Value: err},
 			logrusx.LogField{Key: "request", Value: fmt.Sprintf("%+v", ctx.Request)},
@@ -39,17 +45,50 @@ func (h *Handler) CreateAuction(ctx *gin.Context) {
 	var images []models.Images
 
 	for _, image := range input.Images {
+		file, err := image.Open()
+		if err != nil {
+			h.logx.Error("failed to open the file",
+				logrusx.LogField{Key: "context", Value: err},
+				logrusx.LogField{Key: "request", Value: fmt.Sprintf("%+v", ctx.Request)},
+			)
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, entity.ErrResponse{Message: "invalid file " + image.Filename})
+			return
+		}
+		dir, _ := os.Getwd()
+
+		destination := dir + "/images/" + image.Filename
+
+		dst, err := os.Create(destination)
+		if err != nil {
+			h.logx.Error("failed to create destination",
+				logrusx.LogField{Key: "context", Value: err},
+				logrusx.LogField{Key: "request", Value: fmt.Sprintf("%+v", ctx.Request)},
+			)
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, entity.ErrResponse{Message: "invalid file " + image.Filename})
+			return
+		}
+
+		if _, err = io.Copy(dst, file); err != nil {
+			h.logx.Error("failed to create copy",
+				logrusx.LogField{Key: "context", Value: err},
+				logrusx.LogField{Key: "request", Value: fmt.Sprintf("%+v", ctx.Request)},
+			)
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, entity.ErrResponse{Message: "invalid file " + image.Filename})
+			return
+		}
+
 		images = append(images, models.Images{
-			DownloadUrl: image,
+			DownloadUrl: destination,
 		})
+
 	}
 
 	auction := &models.Auction{
 		CreatorId:   userId,
-		Title:       input.Title,
-		Description: input.Description,
-		StartBit:    input.StartBit,
-		CurrentBit:  input.StartBit,
+		Title:       input.Auction.Title,
+		Description: input.Auction.Description,
+		StartBit:    input.Auction.StartBit,
+		CurrentBit:  input.Auction.StartBit,
 		Images:      images,
 	}
 

@@ -9,5 +9,5 @@ func (Images) TableName() string {
 type Images struct {
 	Id          int64  `gorm:"column:id;->" json:"-"`
 	AuctionId   string `gorm:"column:auctionid" json:"-"`
-	DownloadUrl string `gorm:"column:downloadurl" json:"base64"`
+	DownloadUrl string `gorm:"column:downloadurl" json:"url"`
 }
