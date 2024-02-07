@@ -10,6 +10,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        poppins: ['Poppins', 'Helvetica', 'Arial', 'sans-serif'],
+      },
       colors: {
         'dark-grey': '#272D2D',
         'darkest-grey': '#222727',

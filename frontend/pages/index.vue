@@ -1,1 +1,5 @@
-<template>Dashboard</template>
+<template>
+  <div>
+    <GeneralAppPageTitle title="Dashboard" />
+  </div>
+</template>
