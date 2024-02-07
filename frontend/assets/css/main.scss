@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+@mixin font-face($font-name, $path, $weight: normal, $style: normal) {
+  @font-face {
+    font-family: quote($font-name);
+    src:
+      // url(#{$path}.woff) format('woff'),
+      // url(#{$path}.woff2) format('woff2'),
+      url(#{$path}.ttf) format('truetype');
+    font-weight: $weight;
+    font-style: $style;
+    font-display: swap;
+  }
+}
+
+@include font-face('Poppins', '../fonts/Poppins-Light', 100, normal);
+@include font-face('Poppins', '../fonts/Poppins-Regular', normal, normal);
+@include font-face('Poppins', '../fonts/Poppins-Medium', 600, normal);
+@include font-face('Poppins', '../fonts/Poppins-Bold', bold, normal);
+
+@include font-face('Poppins', '../fonts/Poppins-LightItalic', 100, italic);
+@include font-face('Poppins', '../fonts/Poppins-Italic', normal, italic);
+@include font-face('Poppins', '../fonts/Poppins-MediumItalic', 600, italic);
+@include font-face('Poppins', '../fonts/Poppins-BoldItalic', bold, italic);
+
 html {
   font-family: sans-serif;
   box-sizing: border-box;

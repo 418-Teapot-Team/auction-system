@@ -4,7 +4,7 @@
     <input
       v-model="model"
       :placeholder="placeholder"
-      class="rounded-full shadow-md text-sm h-[28px] pl-9 align-middle w-full"
+      class="rounded-full shadow-md text-sm h-[28px] pl-9 align-middle w-full bg-white"
     />
   </div>
 </template>
