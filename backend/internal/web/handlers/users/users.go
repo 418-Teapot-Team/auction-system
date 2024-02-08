@@ -6,6 +6,7 @@ import (
 	"github.com/BoryslavGlov/logrusx"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 func (h *Handler) WhoAmI(ctx *gin.Context) {
@@ -21,5 +22,14 @@ func (h *Handler) WhoAmI(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, user)
+	header := ctx.Request.Header.Get("Authorization")
+
+	token := strings.Split(header, "Bearer ")[1]
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"id":       user.Id,
+		"fullName": user.FullName,
+		"username": user.Username,
+		"token":    token,
+	})
 }
