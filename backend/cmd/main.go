@@ -1,6 +1,7 @@
 package main
 
 import (
+	"auction-system/internal/web/handlers/users"
 	"context"
 	"fmt"
 	"log"
@@ -13,6 +14,7 @@ import (
 
 	"auction-system/internal/web/handlers/auction"
 	rauction "auction-system/pkg/repository/auction"
+	rusers "auction-system/pkg/repository/users"
 
 	rauth "auction-system/pkg/repository/auth"
 
@@ -66,12 +68,15 @@ func main() {
 
 	authRepo := rauth.NewAuthRepository(db)
 	auctionRepo := rauction.NewAuctionRepository(db)
+	usersRepo := rusers.NewUserRepository(db)
 
 	authHandler := auth.NewHandler(logx, authRepo, manager)
 	auctionHandler := auction.NewHandler(logx, auctionRepo)
+	usersHandler := users.NewHandler(logx, usersRepo)
 
 	routes.AuthRouters(v1, authHandler)
 	routes.AuctionRouters(v1, auctionHandler, middlewaresService)
+	routes.UsersRouters(v1, usersHandler, middlewaresService)
 
 	srv := new(server.Server)
 
