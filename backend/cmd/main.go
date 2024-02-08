@@ -61,8 +61,8 @@ func main() {
 	)
 
 	middlewaresService := middlewares.NewMiddlewareService(manager)
-	v1 := app.Group("/api/v1")
 	app.Use(middlewaresService.CORSMiddleware())
+	v1 := app.Group("/api/v1")
 
 	authRepo := rauth.NewAuthRepository(db)
 	auctionRepo := rauction.NewAuctionRepository(db)
