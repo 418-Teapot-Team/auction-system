@@ -50,16 +50,43 @@
       </div>
     </div>
     <div>
-      <div class="mt-4 pl-1.5">
+      <div class="mt-5 pl-1.5">
         <span class="text-sm text-gray-800">9 results found</span>
       </div>
-      <div class="mt-4">
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+        <GeneralAuctionCard />
+        <GeneralAuctionCard />
+        <GeneralAuctionCard />
+        <GeneralAuctionCard />
+        <GeneralAuctionCard />
         <GeneralAuctionCard />
       </div>
     </div>
   </div>
 </template>
 <script setup>
+import axios from 'axios';
+const appConfig = useAppConfig();
+const { data } = await useAsyncData(
+  'auctions',
+  () => {
+    return axios.get(appConfig.API_URL + '/auction/all');
+  },
+  {
+    transform(res) {
+      return res.data;
+    },
+  }
+);
+
+if (!data) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Auctions not found',
+    message: 'Auctions not found',
+  });
+}
+
 const tag = ref([]);
 const startBetMin = ref('');
 const startBetMax = ref('');

@@ -6,7 +6,10 @@
     <div class="ml-[170px] w-full px-8">
       <div class="pt-4 flex justify-between mb-4">
         <PartialsAppBreadcrumbs />
-        <AtomsInputsAppSearchInput placeholder="Search For Anything" />
+        <AtomsInputsAppSearchInput
+          class="w-[240px]"
+          placeholder="Search For Anything"
+        />
       </div>
       <slot />
     </div>
