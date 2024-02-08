@@ -60,8 +60,8 @@ func main() {
 		accessTokenDuration,
 	)
 
-	v1 := app.Group("/api/v1")
 	middlewaresService := middlewares.NewMiddlewareService(manager)
+	v1 := app.Group("/api/v1", middlewaresService.CORSMiddleware())
 
 	authRepo := rauth.NewAuthRepository(db)
 	auctionRepo := rauction.NewAuctionRepository(db)
