@@ -1,6 +1,7 @@
 <template>
   <div
     class="bg-light-milky w-full p-4 rounded-lg flex justify-between flex-row-reverse gap-4 min-h-[320px] cursor-pointer"
+    @click="redirectToAuction"
   >
     <div class="w-1/2 flex flex-col justify-between items-start">
       <div>
@@ -72,4 +73,10 @@
 </template>
 <script setup>
 defineProps(['auction']);
+
+const router = useRouter();
+
+function redirectToAuction() {
+  router.push('/auctions/1');
+}
 </script>
