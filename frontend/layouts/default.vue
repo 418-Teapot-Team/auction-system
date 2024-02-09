@@ -1,6 +1,6 @@
 <template>
   <main
-    class="bg-milky min-h-screen min-w-screen p-1 flex justify-start font-poppins"
+    class="bg-milky min-h-screen max-h-screen min-w-screen p-1 flex justify-start font-poppins"
   >
     <PartialsAppAside />
     <div class="ml-[170px] w-full px-8">
