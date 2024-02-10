@@ -1,6 +1,13 @@
 <template>
   <div>
-    <GeneralAppPageTitle title="Auctions" />
+    <div class="flex justify-start gap-x-2 items-center">
+      <GeneralAppPageTitle title="Auctions" />
+      <AtomsButtonsGreenRoundedButton
+        @on-click="() => (isCreateModalShown = true)"
+        text="Craete"
+        class="h-6 w-20"
+      />
+    </div>
     <div class="pt-2 flex flex-col justify-start gap-y-6">
       <div class="flex justify-start gap-x-4 max-w-[65vw]">
         <AtomsInputsAppSelectInput
@@ -62,6 +69,12 @@
         <GeneralAuctionCard />
       </div>
     </div>
+    <Teleport to="body">
+      <GeneralModalsCreateModal
+        v-if="isCreateModalShown"
+        @on-close="() => (isCreateModalShown = false)"
+      />
+    </Teleport>
   </div>
 </template>
 <script setup>
@@ -87,6 +100,7 @@ if (!data) {
   });
 }
 
+const isCreateModalShown = ref(false);
 const tag = ref([]);
 const startBetMin = ref('');
 const startBetMax = ref('');
