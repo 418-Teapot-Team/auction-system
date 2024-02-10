@@ -1,6 +1,14 @@
+v
 <template>
   <div>
-    <GeneralAppPageTitle title="Auction 1" />
+    <div class="flex justify-start gap-x-2 items-center">
+      <GeneralAppPageTitle title="Auction 1" />
+      <AtomsButtonsGreenRoundedButton
+        @on-click="() => (isUpdateModalShown = true)"
+        text="Edit"
+        class="h-6 w-20"
+      />
+    </div>
     <div
       class="flex flex-col justify-start gap-y-4 lg:flex-row lg:justify-between mt-10 h-full lg:gap-x-4"
     >
@@ -88,6 +96,15 @@
         </div>
       </div>
     </div>
+    <Teleport to="body">
+      <GeneralModalsEditModal @on-close="onClose" v-if="isUpdateModalShown" />
+    </Teleport>
   </div>
 </template>
-<script setup></script>
+<script setup>
+const isUpdateModalShown = ref(false);
+
+function onClose() {
+  isUpdateModalShown.value = false;
+}
+</script>
