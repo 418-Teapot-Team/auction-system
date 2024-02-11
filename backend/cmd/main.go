@@ -1,10 +1,12 @@
 package main
 
 import (
+	"auction-system/internal/web/handlers/bids"
 	"auction-system/internal/web/handlers/users"
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -14,6 +16,7 @@ import (
 
 	"auction-system/internal/web/handlers/auction"
 	rauction "auction-system/pkg/repository/auction"
+	rbids "auction-system/pkg/repository/bids"
 	rusers "auction-system/pkg/repository/users"
 
 	rauth "auction-system/pkg/repository/auth"
@@ -25,7 +28,9 @@ import (
 	"auction-system/internal/web/handlers/auth"
 	"auction-system/internal/web/routes"
 	"auction-system/pkg/repository"
+
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 
 	"github.com/BoryslavGlov/logrusx"
 )
@@ -62,6 +67,17 @@ func main() {
 		accessTokenDuration,
 	)
 
+	// websocket setup
+	upgrader := websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+		CheckOrigin: func(r *http.Request) bool {
+			// Allow all connections
+			return true
+		  },
+	}
+	connections := make(map[*websocket.Conn]bool)
+
 	middlewaresService := middlewares.NewMiddlewareService(manager)
 	app.Use(middlewaresService.CORSMiddleware())
 	v1 := app.Group("/api/v1")
@@ -69,14 +85,17 @@ func main() {
 	authRepo := rauth.NewAuthRepository(db)
 	auctionRepo := rauction.NewAuctionRepository(db)
 	usersRepo := rusers.NewUserRepository(db)
+	bidsRepo := rbids.NewBidsRepository(db)
 
 	authHandler := auth.NewHandler(logx, authRepo, manager)
 	auctionHandler := auction.NewHandler(logx, auctionRepo)
 	usersHandler := users.NewHandler(logx, usersRepo)
+	bidsHandler := bids.NewHandler(logx, bidsRepo, auctionRepo, upgrader, connections)
 
 	routes.AuthRouters(v1, authHandler)
 	routes.AuctionRouters(v1, auctionHandler, middlewaresService)
 	routes.UsersRouters(v1, usersHandler, middlewaresService)
+	routes.BidsRouters(v1, bidsHandler, middlewaresService)
 
 	srv := new(server.Server)
 
