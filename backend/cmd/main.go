@@ -31,17 +31,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"github.com/subosito/gotenv"
 
 	"github.com/BoryslavGlov/logrusx"
 )
 
 func main() {
-	// load .env
-	if err := gotenv.Load(); err != nil {
-		log.Fatal(err)
-	}
-
 	logx, err := logrusx.New("auction-system")
 	if err != nil {
 		log.Fatal(err)
