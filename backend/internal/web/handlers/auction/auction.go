@@ -21,7 +21,7 @@ import (
 )
 
 type createAuctionRequestBody struct {
-	Images  []*multipart.FileHeader `form:"images" binding:"required"`
+	Images  []*multipart.FileHeader `form:"images"`
 	Auction struct {
 		Title       string `json:"title" binding:"required"`
 		Description string `json:"description" binding:"required"`
