@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center relative w-[240px]">
+  <div class="flex items-center relative">
     <Icon name="ic:outline-search" class="absolute left-3 h-[16px] w-[16px]" />
     <input
       v-model="model"

@@ -28,19 +28,31 @@
     >
       <div class="flex justify-center items-center gap-x-2 cursor-pointer">
         <Icon
+          v-if="username"
           class="rotate-180 w-7 h-7"
           name="ic:outline-log-out"
           color="#EAEAE4"
         />
-        <div class="flex flex-col">
+        <div class="flex flex-col" @click="logout" v-if="username">
           <span class="text-light-milky">Sign out</span>
-          <span class="text-xs font-thin text-gray-500">My account</span>
+          <span class="text-xs font-thin text-gray-500">{{ username }}</span>
+        </div>
+        <div class="flex flex-col" v-else>
+          <NuxtLink to="/signin" class="text-light-milky">Sign in</NuxtLink>
         </div>
       </div>
     </div>
   </nav>
 </template>
 <script setup>
+const auth = useAuth();
+const username = ref('');
+onBeforeMount(() => {
+  auth.getSession().then((res) => {
+    username.value = res?.username;
+  });
+});
+
 const router = useRouter();
 const menuItems = ref([
   {
@@ -64,4 +76,7 @@ const menuItems = ref([
     icon: 'ic:round-settings',
   },
 ]);
+function logout() {
+  auth.signOut({ redirect: false });
+}
 </script>
