@@ -20,4 +20,5 @@ jobs:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
         JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
         ACCESS_TOKEN_DURATION: ${{ secrets.ACCESS_TOKEN_DURATION }}
+        BASE_API: ${{ secrets.BASE_API }}
       run: docker-compose up -d --force-recreate --build 
