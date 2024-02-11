@@ -21,6 +21,8 @@ services:
       - .:/app
   frontend:
     image: frontend
+    environment:
+      - BASE_API=${BASE_API}
     build:
       context: frontend
       dockerfile: Dockerfile
