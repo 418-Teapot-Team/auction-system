@@ -9,22 +9,48 @@
         <span class="text-cl font-semibold">Create auction</span>
         <Icon name="ic:round-close" @click="onClose" class="cursor-pointer" />
       </div>
-      <AtomsInputsAppPlainInput placeholder="Title" class="w-full" />
+      <AtomsInputsAppPlainInput
+        placeholder="Title"
+        class="w-full"
+        type="text"
+        v-model="auctionPayload.title"
+      />
       <textarea placeholder="Description" class="w-full"></textarea>
       <AtomsInputsAppPlainInput
         placeholder="Tags (e.g. tag1,tag2,tag3 etc)"
         class="w-full"
+        type="text"
+        v-model="auctionPayload.description"
       />
-      <AtomsInputsAppPlainInput placeholder="Minimal bid" class="w-full" />
-      <AtomsButtonsGreenRoundedButton text="Add image" class="h-8 w-32" />
+      <AtomsInputsAppPlainInput
+        placeholder="Minimal bid"
+        class="w-full"
+        type="number"
+        v-model="auctionPayload.startBit"
+      />
+      <!-- <AtomsButtonsGreenRoundedButton text="Add image" class="h-8 w-32" />
       <span>max 4 images</span>
-      <input type="file" hidden />
-      <AtomsButtonsGreenRoundedButton text="Submit" class="h-8 w-32" />
+      <input type="file" hidden /> -->
+      <AtomsButtonsGreenRoundedButton
+        text="Submit"
+        class="h-8 w-32"
+        @on-click="onSubmit"
+      />
     </div>
   </div>
 </template>
 <script setup>
-const emit = defineEmits(['onClose']);
+const emit = defineEmits(['onClose', 'onSubmit']);
+
+const auctionPayload = ref({
+  title: '',
+  description: '',
+  startBit: null,
+});
+
+function onSubmit() {
+  emit('onSubmit', auctionPayload.value);
+}
 
 function onClose() {
   emit('onClose');

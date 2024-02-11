@@ -12,21 +12,20 @@
             <Icon name="mdi:scale-unbalanced" class="w-8 h-8" color="#77FF61" />
           </div>
           <div class="flex flex-col justify-center gap-y-1">
-            <span class="text-sm font-semibold">summitlg</span>
+            <span class="text-sm font-semibold">{{ auction.title }}</span>
             <div
               class="flex justify-start gap-x-2 text-xs text-darkest-grey font-semibold"
             >
-              <span class="bg-light-green p-1 rounded-md shadow-md">Games</span>
-              <span class="bg-white p-1 rounded-md shadow-md">Science</span>
-              <span class="bg-white p-1 rounded-md shadow-md">Social</span>
+              <span class="bg-light-green p-1 rounded-md shadow-md"
+                >Ongoing</span
+              >
+              <span class="bg-white p-1 rounded-md shadow-md">Public</span>
+              <!-- <span class="bg-white p-1 rounded-md shadow-md">Social</span> -->
             </div>
           </div>
         </div>
         <div class="pt-4 text-xs text-gray-600">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim, itaque
-          laboriosam. Ipsa, deserunt molestiae? Eius, est corrupti excepturi
-          fuga, ipsa tempore nobis nihil nisi, dignissimos cumque aut. Deleniti,
-          iure nobis?
+          {{ auction.description }}
         </div>
       </div>
       <div class="flex justify-start items-center 5">
@@ -37,7 +36,7 @@
             class="w-5 h-5"
             color="#272D2D"
           />
-          <span class="font-light">100</span>
+          <span class="font-light">{{ auction.currentBit }}</span>
         </div>
       </div>
       <div>
@@ -49,14 +48,18 @@
               color="#272D2D"
               class="mr-0.5"
             />
-            <span class="font-light text-sm">mekola</span>
+            <span class="font-light text-sm">{{
+              auction.creator.fullName
+            }}</span>
           </div>
         </div>
         <div class="flex justify-start items-center gap-2">
           <span class="font-semibold text-sm">Created at: </span>
           <div>
             <Icon name="ic:baseline-calendar-month" color="#272D2D" />
-            <span class="font-light text-sm">11-05-2024</span>
+            <span class="font-light text-sm">{{
+              dayjs(auction.createdAt).format('DD-MM-YYYY')
+            }}</span>
           </div>
         </div>
       </div>
@@ -72,6 +75,7 @@
   </div>
 </template>
 <script setup>
+import dayjs from 'dayjs';
 defineProps(['auction']);
 
 const router = useRouter();

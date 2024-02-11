@@ -4,11 +4,11 @@
       <GeneralAppPageTitle title="Auctions" />
       <AtomsButtonsGreenRoundedButton
         @on-click="() => (isCreateModalShown = true)"
-        text="Craete"
+        text="Create"
         class="h-6 w-20"
       />
     </div>
-    <div class="pt-2 flex flex-col justify-start gap-y-6">
+    <!-- <div class="pt-2 flex flex-col justify-start gap-y-6">
       <div class="flex justify-start gap-x-4 max-w-[65vw]">
         <AtomsInputsAppSelectInput
           :options="tags"
@@ -55,32 +55,41 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div>
       <div class="mt-5 pl-1.5">
-        <span class="text-sm text-gray-800">9 results found</span>
+        <span class="text-sm text-gray-800"
+          >{{ data?.data?.length }} results found</span
+        >
       </div>
-      <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
-        <GeneralAuctionCard />
-        <GeneralAuctionCard />
-        <GeneralAuctionCard />
-        <GeneralAuctionCard />
-        <GeneralAuctionCard />
-        <GeneralAuctionCard />
+      <div
+        class="grid grid-cols-1 xl:grid-cols-2 gap-5"
+        v-if="data.data?.length"
+      >
+        <GeneralAuctionCard
+          v-for="auction in data.data"
+          :auction="auction"
+          :key="auction.id"
+        />
       </div>
     </div>
     <Teleport to="body">
       <GeneralModalsCreateModal
         v-if="isCreateModalShown"
         @on-close="() => (isCreateModalShown = false)"
+        @on-submit="createAuction"
       />
     </Teleport>
   </div>
 </template>
 <script setup>
 import axios from 'axios';
+import useStore from '@/stores/index';
 const appConfig = useAppConfig();
-const { data } = await useAsyncData(
+
+const store = useStore();
+
+const { data, refresh } = await useAsyncData(
   'auctions',
   () => {
     return axios.get(appConfig.API_URL + '/auction/all');
@@ -92,11 +101,21 @@ const { data } = await useAsyncData(
   }
 );
 
-if (!data) {
+if (!data.value) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Auctions not found',
     message: 'Auctions not found',
+  });
+}
+
+onMounted(() => {
+  console.log(data.value);
+});
+
+function createAuction(payload) {
+  store.createAuction(payload).then(() => {
+    refresh();
   });
 }
 

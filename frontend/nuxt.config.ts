@@ -8,11 +8,17 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  runtimeConfig: {
+    public: {
+      baseAPI: process.env.BASE_API,
+    },
+  },
   plugins: ['~/plugins/v-select'],
   modules: ['@pinia/nuxt', 'nuxt-icon', '@sidebase/nuxt-auth'],
   auth: {
     globalAppMiddleware: false,
     baseURL: process.env.BASE_API,
+
     provider: {
       type: 'local',
       endpoints: {
