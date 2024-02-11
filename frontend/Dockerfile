@@ -11,6 +11,7 @@ COPY . .
 RUN echo "BASE_API=${BASE_API}" > .env
 RUN source .env
 RUN echo $BASE_API
+RUN echo "TEST"
 
 RUN npm run build
 
