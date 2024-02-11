@@ -8,10 +8,8 @@ RUN npm ci
 
 COPY . .
 
-RUN echo "BASE_API=${BASE_API}" > .env
-RUN source .env
+RUN echo "BASE_API=http://142.93.172.206:6969/api/v1" > .env
 RUN echo $BASE_API
-RUN echo "TEST"
 
 RUN npm run build
 
